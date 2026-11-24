@@ -160,6 +160,9 @@
         </select>
         <button class="btn" onclick="toggleView()" id="view-btn">Vue Cartes</button>
         <button class="btn btn-primary" onclick="exportCsv()">Exporter CSV</button>
+        <button class="btn" onclick="exportStateJson()" title="Enregistrer vos statuts et annonces écartées dans ETAT_ANNONCES.json">Sauver état</button>
+        <button class="btn" onclick="document.getElementById('import-file').click()" title="Charger un fichier ETAT_ANNONCES.json">Importer état</button>
+        <input type="file" id="import-file" accept=".json" class="hidden" onchange="importStateJson(this)" />
       </div>
 
       <div id="table-container" class="table-wrap">
@@ -512,6 +515,39 @@
       const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Suivi_Appartement_2250.csv"; a.click();
       showToast("CSV exporté !");
+    }
+    function exportStateJson() {
+      const decisions = {};
+      LISTINGS.forEach(x => {
+        const st = getStatus(x);
+        const note = getNote(x);
+        if (st !== x.status || note !== x.action || st === "Écarté" || st.startsWith("Refusé") || st.startsWith("Visité") || st.startsWith("Contacté") || st.startsWith("Lien")) {
+          decisions[x.id] = { prio: st === "Écarté" ? "Écarté" : x.prio, status: st, note: note, ville: x.city, adresse: x.addr, loyer: x.rent };
+        }
+      });
+      const payload = { derniere_mise_a_jour: new Date().toISOString(), decisions_par_id: decisions };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ETAT_ANNONCES.json"; a.click();
+      showToast("ETAT_ANNONCES.json téléchargé (placez-le dans Liste Appartement) !");
+    }
+    function importStateJson(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          const dec = data.decisions_par_id || {};
+          Object.keys(dec).forEach(id => {
+            if (dec[id].status) state.statuses[id] = dec[id].status;
+            if (dec[id].note) state.notes[id] = dec[id].note;
+          });
+          saveState(); render();
+          showToast("État importé (" + Object.keys(dec).length + " décisions) !");
+        } catch (e) { showToast("Erreur lecture JSON"); }
+      };
+      reader.readAsText(file);
+      input.value = "";
     }
     (function init() {
       const cities = [...new Set(LISTINGS.map(x => x.city))].sort();
