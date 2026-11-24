@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Wings -->
+  <ellipse cx="24" cy="23" rx="9" ry="13" transform="rotate(-32 24 23)" fill="#e0f2fe" opacity="0.92"/>
+  <ellipse cx="40" cy="23" rx="9" ry="13" transform="rotate(32 40 23)" fill="#e0f2fe" opacity="0.92"/>
+  <!-- Stinger -->
+  <polygon points="32,54 28,46 36,46" fill="#0f172a"/>
+  <!-- Body -->
+  <ellipse cx="32" cy="36" rx="12" ry="14" fill="#facc15" stroke="#0f172a" stroke-width="2"/>
+  <!-- Stripes -->
+  <path d="M21 33 Q32 30 43 33 L42 38 Q32 35 22 38 Z" fill="#1e293b"/>
+  <path d="M23 41 Q32 39 41 41 L39 45 Q32 43 25 45 Z" fill="#1e293b"/>
+  <!-- Head -->
+  <circle cx="32" cy="22" r="7.5" fill="#1e293b"/>
+  <!-- Eyes -->
+  <circle cx="29.3" cy="21.5" r="1.4" fill="#ffffff"/>
+  <circle cx="34.7" cy="21.5" r="1.4" fill="#ffffff"/>
+  <!-- Antennae -->
+  <path d="M28 16 Q25 10 21 11" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+  <path d="M36 16 Q39 10 43 11" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+</svg>
