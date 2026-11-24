@@ -140,6 +140,16 @@
           <option value="2 - À voir">2 - À voir uniquement</option>
           <option value="all">Tout afficher (avec écartées)</option>
         </select>
+        <select id="f-status" onchange="render()">
+          <option value="all">Statut : Tous</option>
+          <option value="À contacter">À contacter</option>
+          <option value="À appeler">À appeler</option>
+          <option value="Contacté">Contacté</option>
+          <option value="Dossier déposé">Dossier déposé</option>
+          <option value="Visite prévue">Visite prévue</option>
+          <option value="Visité">Visité</option>
+          <option value="Écarté / Refusé">Écarté / Refusé</option>
+        </select>
         <select id="f-city" onchange="render()">
           <option value="">Toutes les villes</option>
         </select>
@@ -448,6 +458,7 @@
       const q = document.getElementById("q").value.trim().toLowerCase();
       const fr = document.getElementById("f-regime").value;
       const fp = document.getElementById("f-prio").value;
+      const fs = document.getElementById("f-status").value;
       const fc = document.getElementById("f-city").value;
       const fmax = parseInt(document.getElementById("f-max").value, 10);
       const fadded = document.getElementById("f-added").value;
@@ -457,7 +468,8 @@
       return LISTINGS.filter(item => {
         const st = getStatus(item);
         const isExcluded = item.prio === "Écarté" || st === "Écarté / Refusé";
-        if (fp === "actives" && isExcluded) return false;
+        if (fs !== "all" && st !== fs) return false;
+        if (fp === "actives" && isExcluded && fs !== "Écarté / Refusé") return false;
         if (fp === "1 - Top" && item.prio !== "1 - Top") return false;
         if (fp === "2 - À voir" && item.prio !== "2 - À voir") return false;
         if (fr === "libre" && item.regimeType !== "libre") return false;
